@@ -47,9 +47,13 @@ const Hero = ({ setView, dir }) => (
         </div>
 
         <div style={{ position: "relative" }}>
-          {/* Placeholder de imagen principal */}
-          <div className="ph" style={{ aspectRatio: "4/5", borderRadius: "var(--radius-xl)" }}>
-            FOTO · técnico con uniforme en cocina
+          {/* Imagen principal */}
+          <div style={{ aspectRatio: "4/5", borderRadius: "var(--radius-xl)", overflow: "hidden" }}>
+            <img
+              src="static/tecnico_cocina.png"
+              alt="Técnico uniformado trabajando en cocina"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </div>
           {/* Floating price card */}
           <div className="hero-float" style={{
@@ -67,7 +71,7 @@ const Hero = ({ setView, dir }) => (
           </div>
           {/* Floating review */}
           <div className="hero-float" style={{
-            position: "absolute", top: 24, right: -24,
+            position: "absolute", top: 24, right: -68,
             background: "var(--ink-900)", color: "#fff",
             padding: 14, borderRadius: "var(--radius)", boxShadow: "var(--shadow-lg)", width: 240
           }}>
@@ -310,13 +314,15 @@ const Team = () => (
       <h2 className="mt-8">Técnicos certificados, uniformados y con patente SEC.</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginTop: 32 }}>
         {[
-          { t: "Retrato", d: "Cristián · 14 años" },
-          { t: "Retrato", d: "Valentina · 6 años" },
-          { t: "Retrato", d: "Rodrigo · 9 años" },
-          { t: "Camioneta", d: "Flota equipada" },
+          { src: "static/cristian.png", alt: "Cristián, técnico JAPS", d: "Cristián · 14 años" },
+          { src: "static/valentina.png", alt: "Valentina, técnica JAPS", d: "Valentina · 6 años" },
+          { src: "static/rodrigo.png", alt: "Rodrigo, técnico JAPS", d: "Rodrigo · 9 años" },
+          { src: "static/grupo.png", alt: "Equipo técnico junto a camioneta", d: "Flota equipada" },
         ].map((x, i) => (
           <div key={i}>
-            <div className="ph" style={{ aspectRatio: "3/4" }}>{x.t}</div>
+            <div style={{ aspectRatio: "3/4", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)" }}>
+              <img src={x.src} alt={x.alt} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </div>
             <div style={{ fontSize: 13, fontWeight: 600, marginTop: 10 }}>{x.d}</div>
           </div>
         ))}
@@ -348,8 +354,8 @@ const FinalCTA = ({ setView }) => (
           </p>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, position: "relative" }}>
-          <a href="tel:+56974322118" className="btn btn--accent" style={{ padding: "18px 24px", fontSize: 16 }}>
-            <Icon name="phone" size={18}/> +56 9 7432 2118
+          <a href="tel:+56951019283" className="btn btn--accent" style={{ padding: "18px 24px", fontSize: 16 }}>
+            <Icon name="phone" size={18}/> +56 9 51019283
           </a>
           <button className="btn btn--ghost" style={{ color: "#fff", borderColor: "rgba(255,255,255,.2)" }}
             onClick={() => setView("agendar")}>

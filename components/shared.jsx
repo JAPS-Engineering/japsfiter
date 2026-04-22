@@ -3,16 +3,19 @@ const { useState, useEffect, useRef, useMemo } = React;
 
 // =================== SHARED ATOMS ===================
 
-const Logo = ({ size = 32 }) => (
+const Logo = ({ size = 64 }) => (
   <div className="logo">
-    <div className="logo__mark" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        {/* llave inglesa estilizada */}
-        <path d="M14.5 4a4 4 0 0 1 3.9 5L21 11.6 19.6 13 17 10.4a4 4 0 1 1-2.5-6.4z" />
-        <path d="M13 11 4 20l2 2 9-9" />
-      </svg>
+    <div
+      className="logo__mark"
+      style={{ width: size, height: size, background: "var(--bg)", border: "0px solid var(--border)" }}
+    >
+      <img
+        src="static/logo.png"
+        alt="Logo JAPSfiter"
+        style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+      />
     </div>
-    <span>japsfiter</span>
+    <span>JAPSfiter</span>
   </div>
 );
 
@@ -157,7 +160,7 @@ const Footer = () => (
         <div>
           <h4>Contacto</h4>
           <ul>
-            <li>+56 9 7432 2118</li><li>hola@japsfiter.cl</li><li>Providencia, RM</li>
+            <li>+56 9 7432 2118</li><li>contacto.demo@japs.ing</li><li>Providencia, RM</li>
           </ul>
         </div>
       </div>

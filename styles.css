@@ -230,7 +230,7 @@ p { margin: 0 0 12px; color: var(--text); }
 /* ============ Logo ============ */
 .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; font-size: 20px; }
 .logo__mark {
-  width: 32px; height: 32px; border-radius: 9px;
+  width: 32px; height: 32px; border-radius: 1px;
   background: var(--primary);
   display: grid; place-items: center;
   color: var(--amber-500);
