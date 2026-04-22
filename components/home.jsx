@@ -50,7 +50,7 @@ const Hero = ({ setView, dir }) => (
           {/* Imagen principal */}
           <div style={{ aspectRatio: "4/5", borderRadius: "var(--radius-xl)", overflow: "hidden" }}>
             <img
-              src="static/tecnico_cocina.jpc"
+              src="static/tecnico_cocina.jpg"
               alt="Técnico uniformado trabajando en cocina"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
@@ -314,10 +314,10 @@ const Team = () => (
       <h2 className="mt-8">Técnicos certificados, uniformados y con patente SEC.</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginTop: 32 }}>
         {[
-          { src: "static/cristian.jpc", alt: "Cristián, técnico JAPS", d: "Cristián · 14 años" },
-          { src: "static/valentina.jpc", alt: "Valentina, técnica JAPS", d: "Valentina · 6 años" },
-          { src: "static/rodrigo.jpc", alt: "Rodrigo, técnico JAPS", d: "Rodrigo · 9 años" },
-          { src: "static/grupo.jpc", alt: "Equipo técnico junto a camioneta", d: "Flota equipada" },
+          { src: "static/cristian.jpg", alt: "Cristián, técnico JAPS", d: "Cristián · 14 años" },
+          { src: "static/valentina.jpg", alt: "Valentina, técnica JAPS", d: "Valentina · 6 años" },
+          { src: "static/rodrigo.jpg", alt: "Rodrigo, técnico JAPS", d: "Rodrigo · 9 años" },
+          { src: "static/grupo.jpg", alt: "Equipo técnico junto a camioneta", d: "Flota equipada" },
         ].map((x, i) => (
           <div key={i}>
             <div style={{ aspectRatio: "3/4", borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid var(--border)", background: "var(--surface)" }}>
