@@ -57,8 +57,37 @@ const normalizePath = (pathname = "/") => {
   return clean === "" ? "/" : clean.toLowerCase();
 };
 
-const viewToPath = (view) => VIEW_TO_PATH[view] || VIEW_TO_PATH.home;
-const pathToView = (pathname) => PATH_TO_VIEW[normalizePath(pathname)] || "home";
+const HOSTED_BASE_PATH = "/japsfiter";
+
+const resolveBasePath = () => {
+  const normalizedPath = normalizePath(window.location.pathname);
+  if (window.location.hostname === "japs.ing") return HOSTED_BASE_PATH;
+  if (normalizedPath === HOSTED_BASE_PATH || normalizedPath.startsWith(`${HOSTED_BASE_PATH}/`)) {
+    return HOSTED_BASE_PATH;
+  }
+  return "";
+};
+
+const BASE_PATH = resolveBasePath();
+
+const withBasePath = (path) => {
+  if (!BASE_PATH) return path;
+  return path === "/" ? BASE_PATH : `${BASE_PATH}${path}`;
+};
+
+const stripBasePath = (pathname) => {
+  const normalizedPath = normalizePath(pathname);
+  if (!BASE_PATH) return normalizedPath;
+  if (normalizedPath === BASE_PATH) return "/";
+  if (normalizedPath.startsWith(`${BASE_PATH}/`)) {
+    const strippedPath = normalizedPath.slice(BASE_PATH.length);
+    return strippedPath === "" ? "/" : strippedPath;
+  }
+  return normalizedPath;
+};
+
+const viewToPath = (view) => withBasePath(VIEW_TO_PATH[view] || VIEW_TO_PATH.home);
+const pathToView = (pathname) => PATH_TO_VIEW[stripBasePath(pathname)] || "home";
 
 function App() {
   const [view, setViewState] = useState(() => pathToView(window.location.pathname));
@@ -74,7 +103,7 @@ function App() {
     const normalizedPath = normalizePath(window.location.pathname);
     const resolvedView = pathToView(normalizedPath);
     const canonicalPath = viewToPath(resolvedView);
-    if (normalizedPath !== canonicalPath) {
+    if (normalizedPath !== normalizePath(canonicalPath)) {
       window.history.replaceState({ view: resolvedView }, "", canonicalPath);
     }
     setViewState(resolvedView);
@@ -156,7 +185,7 @@ function App() {
   const setView = (nextView, opts = {}) => {
     const safeView = VIEW_TO_PATH[nextView] ? nextView : "home";
     const nextPath = viewToPath(safeView);
-    if (normalizePath(window.location.pathname) !== nextPath) {
+    if (normalizePath(window.location.pathname) !== normalizePath(nextPath)) {
       const historyMethod = opts.replace ? "replaceState" : "pushState";
       window.history[historyMethod]({ view: safeView }, "", nextPath);
     }
