@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es" data-dir="a">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Japsfiter · Gasfitería a domicilio sin dramas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..700&family=Inter+Tight:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#f4f1ea">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f4f1ea"/>
+    <rect x="300" y="250" width="600" height="300" rx="40" fill="#0b3b8c"/>
+    <g transform="translate(600 400)" fill="none" stroke="#f5a623" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 -80 a60 60 0 1 1 -60 60 l-90 90 30 30 90 -90 a60 60 0 0 0 30 -90 z"/>
+    </g>
+    <text x="600" y="640" font-family="Georgia, serif" font-size="72" font-weight="500" text-anchor="middle" fill="#0f1115" letter-spacing="-2">japsfiter</text>
+  </svg>
+</template>
+<div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="components/shared.jsx"></script>
+<script type="text/babel" src="components/home.jsx"></script>
+<script type="text/babel" src="components/services.jsx"></script>
+<script type="text/babel" src="components/agendar.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "direction": "b",
+  "accent": "#F5A623",
+  "showPrices": true
+}/*EDITMODE-END*/;
+
+function App() {
+  const [view, setView] = useState(() => localStorage.getItem("jf-view") || "home");
+  const [tweaksOpen, setTweaksOpen] = useState(false);
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+  const [aiOpen, setAiOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("jf-view", view);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [view]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-dir", tweaks.direction);
+    document.documentElement.style.setProperty("--accent", tweaks.accent);
+  }, [tweaks]);
+
+  useEffect(() => {
+    const onMsg = (e) => {
+      if (e.data?.type === "__activate_edit_mode") setTweaksOpen(true);
+      if (e.data?.type === "__deactivate_edit_mode") setTweaksOpen(false);
+    };
+    window.addEventListener("message", onMsg);
+    window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
+  useEffect(() => {
+    const onOpen = () => setAiOpen(true);
+    window.addEventListener("open-ai-chat", onOpen);
+    return () => window.removeEventListener("open-ai-chat", onOpen);
+  }, []);
+
+  const updateTweak = (k, v) => {
+    const next = { ...tweaks, [k]: v };
+    setTweaks(next);
+    window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
+  };
+
+  return (
+    <>
+      <Nav view={view} setView={setView}/>
+      <main>
+        <div className="view" data-screen-label={view === "home" ? "Home" : view === "servicios" ? "Servicios" : view === "agendar" ? "Agendar" : "Nosotros"} style={{ display: "block" }}>
+          {view === "home" && <HomeView setView={setView} dir={tweaks.direction}/>}
+          {view === "servicios" && <ServicesView setView={setView}/>}
+          {view === "agendar" && <AgendarView setView={setView}/>}
+          {view === "nosotros" && <NosotrosPlaceholder setView={setView}/>}
+        </div>
+      </main>
+      <Footer/>
+      <WAFloat/>
+      <AIChatButton onOpen={() => setAiOpen(true)}/>
+      <AIChat open={aiOpen} onClose={() => setAiOpen(false)} setView={setView}/>
+
+      {tweaksOpen && (
+        <div className="tweaks open">
+          <h4>Dirección</h4>
+          <div className="tweaks__seg" style={{ width: "100%" }}>
+            <button className={tweaks.direction === "a" ? "on" : ""} onClick={() => updateTweak("direction", "a")} style={{ flex: 1 }}>A · Editorial</button>
+            <button className={tweaks.direction === "b" ? "on" : ""} onClick={() => updateTweak("direction", "b")} style={{ flex: 1 }}>B · Utility</button>
+          </div>
+          <div className="tweaks__row">
+            <span>Color acento</span>
+            <div className="row gap-8">
+              {["#F5A623", "#5BE9B9", "#FF6B3D", "#B388FF"].map(c => (
+                <button key={c} onClick={() => updateTweak("accent", c)} aria-label={c}
+                  style={{ width: 22, height: 22, borderRadius: 999, background: c, border: tweaks.accent === c ? "2px solid var(--ink-900)" : "1px solid var(--border)", cursor: "pointer" }}/>
+              ))}
+            </div>
+          </div>
+          <div className="tweaks__row">
+            <span>Vista actual</span>
+            <select value={view} onChange={e => setView(e.target.value)} style={{ padding: "4px 8px", borderRadius: 6, border: "1px solid var(--border)" }}>
+              <option value="home">Home</option>
+              <option value="servicios">Servicios</option>
+              <option value="agendar">Agendar</option>
+            </select>
+          </div>
+          <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, paddingTop: 10, borderTop: "1px dashed var(--border)" }}>
+            Tip: prueba ambas direcciones en cada vista.
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function NosotrosPlaceholder({ setView }) {
+  return (
+    <div className="section">
+      <div className="wrap" style={{ textAlign: "center", padding: "80px 24px" }}>
+        <div className="eyebrow">Nosotros</div>
+        <h2 style={{ marginTop: 12 }}>Sección en construcción</h2>
+        <p className="muted">Las vistas principales son Home, Servicios/Cotización y Agendamiento.</p>
+        <button className="btn btn--primary mt-24" onClick={() => setView("home")}>← Volver al inicio</button>
+      </div>
+    </div>
+  );
+}
+
+// Wait for all babel scripts to finish transpiling and attach to window
+const mount = () => {
+  if (!window.HomeView || !window.ServicesView || !window.AgendarView || !window.Nav) {
+    return setTimeout(mount, 50);
+  }
+  const root = ReactDOM.createRoot(document.getElementById("app"));
+  root.render(<App/>);
+};
+mount();
+</script>
+</body>
+</html>
