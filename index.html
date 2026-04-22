@@ -72,7 +72,7 @@ const BASE_PATH = resolveBasePath();
 
 const withBasePath = (path) => {
   if (!BASE_PATH) return path;
-  return path === "/" ? BASE_PATH : `${BASE_PATH}${path}`;
+  return path === "/" ? `${BASE_PATH}/` : `${BASE_PATH}${path}`;
 };
 
 const stripBasePath = (pathname) => {
@@ -100,10 +100,10 @@ function App() {
   }, [view]);
 
   useEffect(() => {
-    const normalizedPath = normalizePath(window.location.pathname);
-    const resolvedView = pathToView(normalizedPath);
+    const currentPath = window.location.pathname;
+    const resolvedView = pathToView(currentPath);
     const canonicalPath = viewToPath(resolvedView);
-    if (normalizedPath !== normalizePath(canonicalPath)) {
+    if (currentPath !== canonicalPath) {
       window.history.replaceState({ view: resolvedView }, "", canonicalPath);
     }
     setViewState(resolvedView);
@@ -185,7 +185,7 @@ function App() {
   const setView = (nextView, opts = {}) => {
     const safeView = VIEW_TO_PATH[nextView] ? nextView : "home";
     const nextPath = viewToPath(safeView);
-    if (normalizePath(window.location.pathname) !== normalizePath(nextPath)) {
+    if (window.location.pathname !== nextPath) {
       const historyMethod = opts.replace ? "replaceState" : "pushState";
       window.history[historyMethod]({ view: safeView }, "", nextPath);
     }
