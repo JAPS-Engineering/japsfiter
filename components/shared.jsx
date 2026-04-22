@@ -88,8 +88,8 @@ const Nav = ({ view, setView, onOpenTweaks }) => {
         <button className="btn btn--primary" onClick={() => go("agendar")}>
           Pedir visita <Icon name="arrow" size={14}/>
         </button>
-        <a href="tel:+56974322118" className="btn btn--ghost">
-          <Icon name="phone" size={14}/> +56 9 7432 2118
+        <a href="tel:+56951019283" className="btn btn--ghost">
+          <Icon name="phone" size={14}/> +56 9 5101 9283
         </a>
         <span className="chip" style={{ alignSelf: "center", marginTop: 8 }}>
           <span className="dot"/> En línea 24/7
@@ -160,7 +160,7 @@ const Footer = () => (
         <div>
           <h4>Contacto</h4>
           <ul>
-            <li>+56 9 7432 2118</li><li>contacto.demo@japs.ing</li><li>Providencia, RM</li>
+            <li>+56 9 5101 9283</li><li>contacto.demo@japs.ing</li><li>Providencia, RM</li>
           </ul>
         </div>
       </div>
@@ -174,11 +174,29 @@ const Footer = () => (
 
 // =================== FLOATING ===================
 
-const WAFloat = () => (
-  <a href="#" className="wa-float" aria-label="WhatsApp" onClick={e => e.preventDefault()}>
-    <Icon name="whatsapp" size={28} />
-  </a>
-);
+const WA_LOGO_SRC = "static/whatsapp-logo.svg";
+const WA_PHONE = "56951019283";
+const WA_DEFAULT_MESSAGE = "Hola Japsfiter, necesito ayuda con un servicio de gasfitería.";
+
+const WAFloat = () => {
+  const waUrl = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(WA_DEFAULT_MESSAGE)}`;
+  return (
+    <a
+      href={waUrl}
+      className="wa-float"
+      aria-label="Abrir chat de WhatsApp"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src={WA_LOGO_SRC}
+        alt=""
+        aria-hidden="true"
+        style={{ width: 28, height: 28 }}
+      />
+    </a>
+  );
+};
 
 const AIChatButton = ({ onOpen }) => (
   <button className="ai-btn" onClick={onOpen}>

@@ -9,18 +9,18 @@ const Hero = ({ setView, dir }) => (
       <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 48, alignItems: "center" }}>
         <div>
           <div className="row gap-8" style={{ marginBottom: 20 }}>
-            <span className="chip"><span className="dot"/> Respondemos en &lt; 7 min</span>
+            <span className="chip"><span className="dot" /> Respondemos en &lt; 7 min</span>
             <span className="chip">⭐ 4.9 · 2.3k reseñas</span>
           </div>
 
           {dir === "a" ? (
             <h1 style={{ margin: "0 0 20px" }}>
-              Gasfitería <em style={{ fontStyle: "italic", color: "var(--primary)" }}>sin dramas</em>,<br/>
+              Gasfitería <em style={{ fontStyle: "italic", color: "var(--primary)" }}>sin dramas</em>,<br />
               en tu casa <span style={{ color: "var(--accent)", fontStyle: "italic" }}>hoy mismo</span>.
             </h1>
           ) : (
             <h1 style={{ margin: "0 0 20px" }}>
-              Gasfiter a domicilio,<br/>
+              Gasfiter a domicilio,<br />
               en <span style={{ color: "var(--primary)" }}>menos de 2 horas</span>.
             </h1>
           )}
@@ -35,14 +35,14 @@ const Hero = ({ setView, dir }) => (
               Cotizar ahora <Icon name="arrow" size={16} />
             </button>
             <button className="btn btn--ghost" onClick={() => setView("agendar")}>
-              <Icon name="calendar" size={16}/> Agendar visita
+              <Icon name="calendar" size={16} /> Agendar visita
             </button>
           </div>
 
           <div className="row gap-24 mt-48" style={{ flexWrap: "wrap" }}>
-            <Stat n="12 años" l="en el rubro"/>
-            <Stat n="34" l="comunas cubiertas"/>
-            <Stat n="6 meses" l="de garantía"/>
+            <Stat n="12 años" l="en el rubro" />
+            <Stat n="34" l="comunas cubiertas" />
+            <Stat n="6 meses" l="de garantía" />
           </div>
         </div>
 
@@ -71,7 +71,7 @@ const Hero = ({ setView, dir }) => (
           </div>
           {/* Floating review */}
           <div className="hero-float" style={{
-            position: "absolute", top: 24, right: -68,
+            position: "absolute", top: -38, right: -68,
             background: "var(--ink-900)", color: "#fff",
             padding: 14, borderRadius: "var(--radius)", boxShadow: "var(--shadow-lg)", width: 240
           }}>
@@ -133,7 +133,7 @@ const ServicesGrid = ({ setView }) => {
             <h2 style={{ margin: "8px 0 0", maxWidth: 640 }}>Todo lo de agua y gas, sin letra chica.</h2>
           </div>
           <button className="btn btn--ghost" onClick={() => setView("servicios")}>
-            Ver todos y cotizar <Icon name="arrow" size={14}/>
+            Ver todos y cotizar <Icon name="arrow" size={14} />
           </button>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
@@ -145,13 +145,13 @@ const ServicesGrid = ({ setView }) => {
                 background: "var(--blue-50)", color: "var(--primary)",
                 display: "grid", placeItems: "center"
               }}>
-                <Icon name={it.icon} size={22}/>
+                <Icon name={it.icon} size={22} />
               </div>
               <h3>{it.t}</h3>
               <p className="muted" style={{ margin: 0, fontSize: 14 }}>{it.d}</p>
               <button className="btn btn--ghost btn--sm" style={{ alignSelf: "flex-start", marginTop: "auto" }}
                 onClick={() => setView("servicios")}>
-                Cotizar <Icon name="arrow" size={12}/>
+                Cotizar <Icon name="arrow" size={12} />
               </button>
             </article>
           ))}
@@ -174,7 +174,7 @@ const HowItWorks = () => {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 48, alignItems: "start" }}>
           <div style={{ position: "sticky", top: 100 }}>
             <div className="eyebrow">Cómo funciona</div>
-            <h2 className="mt-8">Tres pasos.<br/>Cero vueltas.</h2>
+            <h2 className="mt-8">Tres pasos.<br />Cero vueltas.</h2>
             <p className="muted mt-16">Transparencia desde el primer mensaje. Si no arreglamos, no cobras visita.</p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -242,14 +242,14 @@ const MapIllustration = () => (
       {/* grid */}
       <defs>
         <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M20 0H0V20" fill="none" stroke="var(--border)" strokeWidth=".5"/>
+          <path d="M20 0H0V20" fill="none" stroke="var(--border)" strokeWidth=".5" />
         </pattern>
       </defs>
       <rect width="400" height="400" fill="url(#g)" />
       {/* Silueta simplificada RM */}
       <path d="M80 120 Q120 80 180 90 Q240 70 290 110 Q330 140 320 200 Q310 260 260 300 Q200 330 140 310 Q90 290 70 230 Q60 170 80 120 Z"
         fill="color-mix(in oklab, var(--primary) 12%, transparent)"
-        stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="4 3"/>
+        stroke="var(--primary)" strokeWidth="1.5" strokeDasharray="4 3" />
       {/* Bases */}
       {[
         { x: 180, y: 150, l: "Providencia" },
@@ -259,17 +259,17 @@ const MapIllustration = () => (
       ].map((b, i) => (
         <g key={i}>
           <circle cx={b.x} cy={b.y} r="20" fill="var(--accent)" opacity="0.2">
-            <animate attributeName="r" values="20;34;20" dur="3s" repeatCount="indefinite" begin={`${i*.5}s`}/>
-            <animate attributeName="opacity" values=".3;0;.3" dur="3s" repeatCount="indefinite" begin={`${i*.5}s`}/>
+            <animate attributeName="r" values="20;34;20" dur="3s" repeatCount="indefinite" begin={`${i * .5}s`} />
+            <animate attributeName="opacity" values=".3;0;.3" dur="3s" repeatCount="indefinite" begin={`${i * .5}s`} />
           </circle>
-          <circle cx={b.x} cy={b.y} r="7" fill="var(--primary)" stroke="#fff" strokeWidth="2.5"/>
+          <circle cx={b.x} cy={b.y} r="7" fill="var(--primary)" stroke="#fff" strokeWidth="2.5" />
           <text x={b.x + 12} y={b.y + 4} fontSize="10" fontWeight="600" fontFamily="var(--font-body)" fill="var(--ink-900)">{b.l}</text>
         </g>
       ))}
     </svg>
     <div style={{ position: "absolute", bottom: 16, left: 16, display: "flex", gap: 12 }}>
-      <span className="chip"><Icon name="truck" size={12}/> 12 camionetas</span>
-      <span className="chip"><Icon name="users" size={12}/> 28 técnicos</span>
+      <span className="chip"><Icon name="truck" size={12} /> 12 camionetas</span>
+      <span className="chip"><Icon name="users" size={12} /> 28 técnicos</span>
     </div>
   </div>
 );
@@ -291,7 +291,7 @@ const Testimonials = () => {
           {t.map((x, i) => (
             <div key={i} className="card" style={{ display: "flex", flexDirection: "column", gap: 12, background: "var(--bg)" }}>
               <div style={{ display: "flex", gap: 2, color: "var(--accent)" }}>
-                {[...Array(x.s)].map((_, j) => <Icon key={j} name="star" size={14}/>)}
+                {[...Array(x.s)].map((_, j) => <Icon key={j} name="star" size={14} />)}
               </div>
               <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}>"{x.q}"</p>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px dashed var(--border)" }}>
@@ -344,7 +344,7 @@ const FinalCTA = ({ setView }) => (
         <div style={{
           position: "absolute", right: -80, top: -80, width: 280, height: 280,
           background: "radial-gradient(circle, var(--accent), transparent 70%)", opacity: .35,
-        }}/>
+        }} />
         <div style={{ position: "relative" }}>
           <h2 style={{ color: "#fff", margin: 0, maxWidth: 560 }}>
             ¿Tienes una fuga <em style={{ color: "var(--accent)" }}>ahora mismo</em>?
@@ -355,7 +355,7 @@ const FinalCTA = ({ setView }) => (
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, position: "relative" }}>
           <a href="tel:+56951019283" className="btn btn--accent" style={{ padding: "18px 24px", fontSize: 16 }}>
-            <Icon name="phone" size={18}/> +56 9 51019283
+            <Icon name="phone" size={18} /> +56 9 51019283
           </a>
           <button className="btn btn--ghost" style={{ color: "#fff", borderColor: "rgba(255,255,255,.2)" }}
             onClick={() => setView("agendar")}>
@@ -369,14 +369,14 @@ const FinalCTA = ({ setView }) => (
 
 const HomeView = ({ setView, dir }) => (
   <>
-    <Hero setView={setView} dir={dir}/>
+    <Hero setView={setView} dir={dir} />
     <LogosStrip />
-    <ServicesGrid setView={setView}/>
+    <ServicesGrid setView={setView} />
     <HowItWorks />
     <Coverage />
     <Testimonials />
     <Team />
-    <FinalCTA setView={setView}/>
+    <FinalCTA setView={setView} />
   </>
 );
 

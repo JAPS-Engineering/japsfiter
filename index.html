@@ -30,6 +30,7 @@
 <script type="text/babel" src="components/home.jsx"></script>
 <script type="text/babel" src="components/services.jsx"></script>
 <script type="text/babel" src="components/agendar.jsx"></script>
+<script type="text/babel" src="components/nosotros.jsx"></script>
 
 <script type="text/babel">
 const { useState, useEffect } = React;
@@ -40,16 +41,50 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "showPrices": true
 }/*EDITMODE-END*/;
 
+const VIEW_TO_PATH = Object.freeze({
+  home: "/",
+  servicios: "/servicios",
+  agendar: "/agendar",
+  nosotros: "/nosotros",
+});
+
+const PATH_TO_VIEW = Object.freeze(
+  Object.fromEntries(Object.entries(VIEW_TO_PATH).map(([view, path]) => [path, view]))
+);
+
+const normalizePath = (pathname = "/") => {
+  const clean = pathname.replace(/\/+$/, "");
+  return clean === "" ? "/" : clean.toLowerCase();
+};
+
+const viewToPath = (view) => VIEW_TO_PATH[view] || VIEW_TO_PATH.home;
+const pathToView = (pathname) => PATH_TO_VIEW[normalizePath(pathname)] || "home";
+
 function App() {
-  const [view, setView] = useState(() => localStorage.getItem("jf-view") || "home");
+  const [view, setViewState] = useState(() => pathToView(window.location.pathname));
   const [tweaksOpen, setTweaksOpen] = useState(false);
   const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
   const [aiOpen, setAiOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("jf-view", view);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [view]);
+
+  useEffect(() => {
+    const normalizedPath = normalizePath(window.location.pathname);
+    const resolvedView = pathToView(normalizedPath);
+    const canonicalPath = viewToPath(resolvedView);
+    if (normalizedPath !== canonicalPath) {
+      window.history.replaceState({ view: resolvedView }, "", canonicalPath);
+    }
+    setViewState(resolvedView);
+  }, []);
+
+  useEffect(() => {
+    const onPopState = () => setViewState(pathToView(window.location.pathname));
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-dir", tweaks.direction);
@@ -72,10 +107,60 @@ function App() {
     return () => window.removeEventListener("open-ai-chat", onOpen);
   }, []);
 
+  useEffect(() => {
+    const targets = Array.from(
+      document.querySelectorAll("main .section, main .hero-float, footer.footer")
+    );
+    if (targets.length === 0) return;
+
+    targets.forEach((el, idx) => {
+      el.classList.add("scroll-reveal");
+      el.style.setProperty("--reveal-delay", `${(idx % 4) * 40}ms`);
+    });
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      targets.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    targets.forEach((el) => {
+      const alreadyInView = el.getBoundingClientRect().top <= window.innerHeight * 0.92;
+      if (alreadyInView) {
+        el.classList.add("is-visible");
+      } else {
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [view]);
+
   const updateTweak = (k, v) => {
     const next = { ...tweaks, [k]: v };
     setTweaks(next);
     window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
+  };
+
+  const setView = (nextView, opts = {}) => {
+    const safeView = VIEW_TO_PATH[nextView] ? nextView : "home";
+    const nextPath = viewToPath(safeView);
+    if (normalizePath(window.location.pathname) !== nextPath) {
+      const historyMethod = opts.replace ? "replaceState" : "pushState";
+      window.history[historyMethod]({ view: safeView }, "", nextPath);
+    }
+    setViewState(safeView);
   };
 
   return (
@@ -86,7 +171,7 @@ function App() {
           {view === "home" && <HomeView setView={setView} dir={tweaks.direction}/>}
           {view === "servicios" && <ServicesView setView={setView}/>}
           {view === "agendar" && <AgendarView setView={setView}/>}
-          {view === "nosotros" && <NosotrosPlaceholder setView={setView}/>}
+          {view === "nosotros" && <NosotrosView setView={setView}/>}
         </div>
       </main>
       <Footer/>
@@ -116,6 +201,7 @@ function App() {
               <option value="home">Home</option>
               <option value="servicios">Servicios</option>
               <option value="agendar">Agendar</option>
+              <option value="nosotros">Nosotros</option>
             </select>
           </div>
           <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, paddingTop: 10, borderTop: "1px dashed var(--border)" }}>
@@ -127,22 +213,11 @@ function App() {
   );
 }
 
-function NosotrosPlaceholder({ setView }) {
-  return (
-    <div className="section">
-      <div className="wrap" style={{ textAlign: "center", padding: "80px 24px" }}>
-        <div className="eyebrow">Nosotros</div>
-        <h2 style={{ marginTop: 12 }}>Sección en construcción</h2>
-        <p className="muted">Las vistas principales son Home, Servicios/Cotización y Agendamiento.</p>
-        <button className="btn btn--primary mt-24" onClick={() => setView("home")}>← Volver al inicio</button>
-      </div>
-    </div>
-  );
-}
+// NosotrosView is loaded from components/nosotros.jsx
 
 // Wait for all babel scripts to finish transpiling and attach to window
 const mount = () => {
-  if (!window.HomeView || !window.ServicesView || !window.AgendarView || !window.Nav) {
+  if (!window.HomeView || !window.ServicesView || !window.AgendarView || !window.NosotrosView || !window.Nav) {
     return setTimeout(mount, 50);
   }
   const root = ReactDOM.createRoot(document.getElementById("app"));
